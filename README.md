@@ -1,6 +1,8 @@
 # Kusto Detective Agency Hackathon
 
 - Proctors see [readme.md](/assets/) in assets for guidance.
+- What attendies are saying? 
+  - [(150+) Post | LinkedIn](https://www.linkedin.com/posts/georgia-draper-20849b182_learning-microsoft-event-activity-7064561657577885696-JORS)
 
 ## Contributing
 
