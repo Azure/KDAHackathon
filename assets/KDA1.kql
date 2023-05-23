@@ -1,0 +1,101 @@
+﻿#connect cluster('kvc43f0ee6600e24ef2b0e.southcentralus').database('KustoDetectiveAgency')
+
+// NOTES
+// Each book weight is known
+// Each book, but the missing one, has a RFID badge
+// Each shelf's actual total book weight is known and the RFIDs of the books on it
+// We know details are: Title: De Revolutionibus Magnis Data, Written By: Gustav Kustov, Published: 1613
+
+
+// Rarest book gone missing!
+
+.drop table Books ifexists
+
+.drop table Shelves ifexists 
+
+.execute database script <|
+// Create table for the books
+.create table Books(rf_id:string, book_title:string, publish_date:long, author:string, language:string, number_of_pages:long, weight_gram:long)
+// Import data for books
+// (Used data is utilzing catalogue from https://github.com/internetarchive/openlibrary )
+.ingest into table Books ('https://kustodetectiveagency.blob.core.windows.net/digitown-books/books.csv.gz') with (ignoreFirstRecord=true)
+// Create table for the shelves
+.create table Shelves (shelf:long, rf_ids:dynamic, total_weight:long) 
+// Import data for shelves
+.ingest into table Shelves ('https://kustodetectiveagency.blob.core.windows.net/digitown-books/shelves.csv.gz') with (ignoreFirstRecord=true)
+
+
+// Luckily, everything is digital in the Digitown library:
+// - Each book has its parameters recorded: number of pages, weight.
+// - Each book has RFID sticker attached (RFID: radio-transmitter with ID).
+// - Each shelve in the Museum sends data: what RFIDs appear on the shelve and also measures actual total weight of books on the shelve.
+
+// Unfortunately, the RFID of the "De Revolutionibus Magnis Data" was found on the museum floor - detached and lonely.
+// Perhaps, you will be able to locate the book on one of the museum shelves and save the day?
+
+// HINT: The missing book is located on a shelf, 
+// so the actual weight of the self is higher than the sum of weights that are reported on that shelf 
+// because the book is missing the RFID.
+
+// hint 1
+Books | where author has 'Kustov' //or book_title == 'De Revolutionibus Magnis Data' or publish_date ==1613 or weight_gram == 1764
+
+// hint 2
+// Shelves data consist of book references (rf_ids) and the total weight of books measured by the shelve. 
+// Here is a query example of how single shelf data can be examined: 
+Shelves 
+| where shelf == '5853' 
+| mv-expand rf_id = rf_ids to typeof(string) 
+| lookup Books on rf_id 
+| project shelf, author, book_title, total_weight, weight_gram
+
+
+// LET'S LOOK AT THE DATA!
+
+Books
+| take 1
+
+Shelves
+| take 1
+
+// so lets expand shelves
+
+Shelves
+| mv-expand rf_ids to typeof(string)
+| take 100
+
+// now lets join books and sum their weights to summarize
+// we also need to total weight of the shelf, so we can take_any to summarize.
+
+// but wait how do we know its actually missing? 
+// what rf_id is not on a shelve?
+Shelves 
+| mv-expand rf_id = rf_ids to typeof(string)
+| join kind=rightanti Books on $left.rf_id == $right.rf_id
+
+// can we calculate the difference in weights to find it?
+Shelves
+| mv-expand rf_id = rf_ids to typeof(string)
+| lookup Books on rf_id 
+| summarize sum(weight_gram) by shelf, total_weight
+| extend diff= total_weight - sum_weight_gram //total reported minus the sum of each book on a shelf.
+| order by diff desc
+| where diff >= 1764
+
+
+// another method...
+let book_weight = toscalar(
+Books
+| where book_title == "De Revolutionibus Magnis Data"
+| where publish_date == 1613
+| where author == "Gustav Kustov"
+| project weight_gram );
+Shelves
+| mv-expand rf_ids to typeof(string)
+| join Books on $left.rf_ids == $right.rf_id
+| summarize 
+        actual_total_weight   = take_any(total_weight),
+        expected_total_weight = sum(weight_gram)
+        by shelf
+| extend weight_diffrence = tolong(actual_total_weight - expected_total_weight)
+| where  weight_diffrence >= tolong(book_weight)
