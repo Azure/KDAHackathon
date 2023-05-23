@@ -1,6 +1,6 @@
 # Kusto Detective Agency Hackathon
 
-- Proctors see [readme.md](/assets/readme.md) in assets for guidance.
+- Proctors see [readme.md](/assets/) in assets for guidance.
 
 ## Contributing
 
