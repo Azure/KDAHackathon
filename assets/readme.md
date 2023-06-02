@@ -18,3 +18,15 @@
 ### SPOILER ALERT: ⚠️
 1. KQL files contain thought process of how someone solved the Onboarding, Case 1 (Missing Book) and Case 2 (Election Fraud) of Season 1. Realisticly we will not make it pass case 2 due to time constraints. However, if there's time during your workshop delivery, then please continue procotoring the Kusto Detective Agency additional cases and/or help attendies with QnA. 
 2. Additional guidance for Season 1 (by official [AvivYaniv](https://gist.github.com/AvivYaniv)) can be found [here](https://medium.com/courisity-is-a-drug/walk-through-guide-for-kusto-detective-agency-onboarding-level-5ed569e3b123).
+
+### Events Checklist:
+1. Is there projector equipment available for proctor to present using HDMI? 
+2. Is there audio/mic/visual equipment available in the workshop room? 
+3. Is there reliable wifi access with internet access for attendees and proctors to connect to Azure, Microsoft Docs and/or public internet? 
+4. If food is being catered (breakfast/lunch/snacks) are there any near-by food vendor preferences or dietary restrictions we should be aware of?
+5. Does anyone require accessibility assistance to help accommodate?
+6. Do guests need any form of ID, Gov, Badge, Health Check, etc to enter parking lot or customer office? 
+7. Is the workshop location board-room style or large onstage trainings type theater room? 
+8. Can they provide instructions how to arrive from the entrance to the location of the room?
+9. Are there facilities such as restrooms, spaces for attendees to walk to & from location of the workshop room?
+10. Can the proctors bring swag to give away to attendees of the event?
