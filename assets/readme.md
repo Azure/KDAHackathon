@@ -31,5 +31,5 @@
 9. Are there facilities such as restrooms, spaces for attendees to walk to & from location of the workshop room?
 10. Can the proctors bring swag to give away to attendees of the event?
 
-### MS-Internal
+### MS-Internal 🍰
 This asset is part of VBDs under [Power Business Decision with Cloud Scale Analytics](https://eng.ms/docs/microsoft-customer-partner-solutions-mcaps-core/customer-experience-and-support/customer-success/data-ai/resource-center/vbd/02_cloud_scale_analytics/readme). 
