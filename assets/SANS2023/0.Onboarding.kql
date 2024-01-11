@@ -23,6 +23,9 @@
 
 
 
+
+// Train me...
+
 let u=AuthenticationEvents
 | where hostname has 'LAPTOP'
 | where result == 'Successful Login' 
@@ -30,8 +33,85 @@ let u=AuthenticationEvents
 Employees
 | join u on username
 | where role =='Craftsperson Elf'
+//22? fail...
+
+
+// How many Craftperson Elf's are working from laptops?
+Employees
+| where role == "Craftsperson Elf"
+| where hostname has "LAPTOP"
+| distinct username
+| count //25! Booo...
+
+
+Employees 
+| take 10
+
+Email 
+| take 10 
+  
+Employees 
+| take 10 
+  
+OutboundNetworkEvents 
+| take 10
+
+Employees 
 | count
-// 22? fail..
+
+Email
+| where recipient == 'santa_claus@santaworkshopgeeseislands.org' 
+| summarize count() by recipient, link
+
+Employees 
+| where name has "santa"
+
+Employees 
+| where name =~ "santa claus"
+
+Employees
+| where ip_addr =='10.10.0.19'
+//Candy Cane Sugarplum
+
+// TIP 1:
+// While performing their day-to-day tasks, 
+// North Pole employees send and receive emails.
+// A record of each of these emails is stored in the Email table.
+
+Email
+| where sender =~ "santa_claus@santaworkshopgeeseislands.org"
+
+// how many did santa receive?
+Email
+| where recipient =~ "santa_claus@santaworkshopgeeseislands.org"
+| count 
+// 19!
+
+Email
+| where sender has "SantaWorkshopGeeseIslands.org"
+| summarize dcount(sender)
+
+Email
+| where sender has "SantaWorkshopGeeseIslands.org"
+| distinct sender
+
+// tracking down a click!
+OutboundNetworkEvents
+| take 10 //src_ip is the user's ip address. 1:1 in Employees
+
+Employees 
+| where name == "Rudolph Wreathington"
 
 
-// Train me...
+OutboundNetworkEvents 
+| where src_ip == "10.10.0.75" 
+| distinct url 
+| count 
+//59...bug?
+
+OutboundNetworkEvents 
+| where src_ip == "10.10.0.75" 
+| project parse_url(url)
+| project host=tostring(Column1.Host)
+| distinct host
+| count //41...bug?
