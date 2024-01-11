@@ -1,0 +1,12 @@
+// the alerts says the user clicked the malicious link
+// 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+
+// Email of receipient?
+Email
+| where link == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+// alabaster_snowball@santaworkshopgeeseislands.org
+
+// Email of sender?
+Email
+| where link == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+// cwombley@gmail.com
