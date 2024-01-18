@@ -56,3 +56,39 @@ FileCreationEvents
 ///////////////////////
 // CASE 4 - The Host //
 ///////////////////////
+// The attacker created an reverse tunnel connection with the compromised machine. 
+// What IP was the connection forwarded to?
+let dt = toscalar(OutboundNetworkEvents
+| where url == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+| project timestamp);
+ProcessEvents
+| where timestamp >= todatetime(dt) and hostname =='Y1US-DESKTOP' 
+| where  process_commandline has 'forward'
+// 113.37.9.17
+
+
+// What is the timestamp when the attackers enumerated network shares on the machine?
+let dt = toscalar(OutboundNetworkEvents
+| where url == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+| project timestamp);
+ProcessEvents
+| where timestamp >= todatetime(dt) and hostname =='Y1US-DESKTOP' 
+| where  process_commandline has 'share'
+// 2023-12-02T16:51:44Z
+
+
+// What was the hostname of the system the attacker moved laterally to?
+let dt = toscalar(OutboundNetworkEvents
+| where url == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+| project timestamp);
+ProcessEvents
+| where timestamp >= todatetime(dt) and hostname =='Y1US-DESKTOP' 
+| where parent_process_hash == "614ca7b627533e22aa3e5c3594605dc6fe6f000b0cc2b845ece47ca60673ec7f"
+| where * has @'\\'
+// cmd.exe /C net use \\NorthPolefileshare\c$ /user:admin AdminPass123
+
+
+
+//////////////////////////
+// CASE 5 - The Message //
+//////////////////////////
