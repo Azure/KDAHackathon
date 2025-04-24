@@ -1,0 +1,469 @@
+{
+  "schema_version": "55",
+  "title": "DetectiveAgency",
+  "autoRefresh": {
+    "enabled": true,
+    "defaultInterval": "1s"
+  },
+  "tiles": [
+    {
+      "id": "641b5a28-9300-451a-9a7a-eea0f6f8f8d3",
+      "title": "Active Vehicles Count",
+      "visualType": "card",
+      "pageId": "af7f2eba-a95d-426a-8193-e1d436725d56",
+      "layout": {
+        "x": 0,
+        "y": 9,
+        "width": 3,
+        "height": 3
+      },
+      "queryRef": {
+        "kind": "query",
+        "queryId": "c37a01f3-f650-4d45-866f-d678d3f2ff6a"
+      },
+      "visualOptions": {
+        "multiStat__textSize": "large",
+        "multiStat__valueColumn": null,
+        "colorRulesDisabled": true,
+        "colorStyle": "light",
+        "colorRules": []
+      }
+    },
+    {
+      "id": "e83950d4-56ac-4130-a4e7-7a2647bc0c33",
+      "title": "Delay",
+      "visualType": "card",
+      "pageId": "af7f2eba-a95d-426a-8193-e1d436725d56",
+      "layout": {
+        "x": 6,
+        "y": 9,
+        "width": 3,
+        "height": 3
+      },
+      "queryRef": {
+        "kind": "query",
+        "queryId": "50616af9-77f9-4fad-9e9c-772c475a622c"
+      },
+      "visualOptions": {
+        "multiStat__textSize": "large",
+        "multiStat__valueColumn": null,
+        "colorRulesDisabled": false,
+        "colorStyle": "light",
+        "colorRules": [
+          {
+            "id": "5c8de4b0-555f-4911-9123-02076dbd86c6",
+            "ruleType": "colorByCondition",
+            "applyToColumn": null,
+            "hideText": false,
+            "applyTo": "cells",
+            "conditions": [
+              {
+                "operator": ">",
+                "column": null,
+                "values": [
+                  "0"
+                ]
+              }
+            ],
+            "chainingOperator": "and",
+            "colorStyle": "bold",
+            "color": "yellow",
+            "tag": "",
+            "icon": null,
+            "ruleName": "",
+            "visualType": "card"
+          },
+          {
+            "id": "844a81da-31d0-4856-9348-142ea19aab71",
+            "ruleType": "colorByCondition",
+            "applyToColumn": null,
+            "hideText": false,
+            "applyTo": "cells",
+            "conditions": [
+              {
+                "column": null,
+                "operator": ">",
+                "values": [
+                  ""
+                ]
+              }
+            ],
+            "chainingOperator": "and",
+            "colorStyle": "bold",
+            "color": null,
+            "tag": "",
+            "icon": null,
+            "ruleName": "",
+            "visualType": "card"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cd78ad3b-f0ca-4f97-baa8-13c5dced4b6e",
+      "title": "On Time",
+      "visualType": "card",
+      "pageId": "af7f2eba-a95d-426a-8193-e1d436725d56",
+      "layout": {
+        "x": 3,
+        "y": 9,
+        "width": 3,
+        "height": 3
+      },
+      "queryRef": {
+        "kind": "query",
+        "queryId": "5a9bded8-f0ad-4c22-9cdf-86b31e79911c"
+      },
+      "visualOptions": {
+        "multiStat__textSize": "large",
+        "multiStat__valueColumn": null,
+        "colorRulesDisabled": false,
+        "colorStyle": "light",
+        "colorRules": [
+          {
+            "id": "5c8de4b0-555f-4911-9123-02076dbd86c6",
+            "ruleType": "colorByCondition",
+            "applyToColumn": null,
+            "hideText": false,
+            "applyTo": "cells",
+            "conditions": [
+              {
+                "operator": ">",
+                "column": null,
+                "values": [
+                  "0"
+                ]
+              }
+            ],
+            "chainingOperator": "and",
+            "colorStyle": "bold",
+            "color": "green",
+            "tag": "",
+            "icon": null,
+            "ruleName": "",
+            "visualType": "card"
+          },
+          {
+            "id": "844a81da-31d0-4856-9348-142ea19aab71",
+            "ruleType": "colorByCondition",
+            "applyToColumn": null,
+            "hideText": false,
+            "applyTo": "cells",
+            "conditions": [
+              {
+                "column": null,
+                "operator": ">",
+                "values": [
+                  ""
+                ]
+              }
+            ],
+            "chainingOperator": "and",
+            "colorStyle": "bold",
+            "color": null,
+            "tag": "",
+            "icon": null,
+            "ruleName": "",
+            "visualType": "card"
+          }
+        ]
+      }
+    },
+    {
+      "id": "0218c8f5-bde8-4d4e-a6e3-3aad3c177bc9",
+      "title": "No Show",
+      "visualType": "card",
+      "pageId": "af7f2eba-a95d-426a-8193-e1d436725d56",
+      "layout": {
+        "x": 9,
+        "y": 9,
+        "width": 3,
+        "height": 3
+      },
+      "queryRef": {
+        "kind": "query",
+        "queryId": "c7ad9972-e9e2-48c2-940b-5e8248683273"
+      },
+      "visualOptions": {
+        "multiStat__textSize": "large",
+        "multiStat__valueColumn": "NoShowCount",
+        "colorRulesDisabled": false,
+        "colorStyle": "light",
+        "colorRules": [
+          {
+            "id": "5c8de4b0-555f-4911-9123-02076dbd86c6",
+            "ruleType": "colorByCondition",
+            "applyToColumn": null,
+            "hideText": false,
+            "applyTo": "cells",
+            "conditions": [
+              {
+                "operator": ">",
+                "column": null,
+                "values": [
+                  "0"
+                ]
+              }
+            ],
+            "chainingOperator": "and",
+            "colorStyle": "bold",
+            "color": "red",
+            "tag": "",
+            "icon": null,
+            "ruleName": "",
+            "visualType": "card"
+          },
+          {
+            "id": "844a81da-31d0-4856-9348-142ea19aab71",
+            "ruleType": "colorByCondition",
+            "applyToColumn": null,
+            "hideText": false,
+            "applyTo": "cells",
+            "conditions": [
+              {
+                "column": null,
+                "operator": ">",
+                "values": [
+                  ""
+                ]
+              }
+            ],
+            "chainingOperator": "and",
+            "colorStyle": "bold",
+            "color": null,
+            "tag": "",
+            "icon": null,
+            "ruleName": "",
+            "visualType": "card"
+          }
+        ]
+      }
+    },
+    {
+      "id": "b77bc02f-1824-4fd9-a760-56d6cec1bc60",
+      "title": "Active Vehicles",
+      "visualType": "column",
+      "pageId": "af7f2eba-a95d-426a-8193-e1d436725d56",
+      "layout": {
+        "x": 12,
+        "y": 9,
+        "width": 12,
+        "height": 13
+      },
+      "queryRef": {
+        "kind": "query",
+        "queryId": "59894b6c-b8a1-42ce-9a39-b7a953305d1c"
+      },
+      "visualOptions": {
+        "multipleYAxes": {
+          "base": {
+            "id": "-1",
+            "label": "",
+            "columns": [],
+            "yAxisMaximumValue": null,
+            "yAxisMinimumValue": 0,
+            "yAxisScale": "linear",
+            "horizontalLines": []
+          },
+          "additional": [],
+          "showMultiplePanels": false
+        },
+        "hideLegend": false,
+        "legendLocation": "bottom",
+        "xColumnTitle": "",
+        "xColumn": "TripId",
+        "yColumns": [
+          "StationNumber"
+        ],
+        "seriesColumns": [
+          "BusLine"
+        ],
+        "xAxisScale": "linear",
+        "verticalLine": "",
+        "crossFilterDisabled": false,
+        "drillthroughDisabled": false,
+        "crossFilter": [],
+        "drillthrough": []
+      }
+    },
+    {
+      "id": "17047a6a-d65e-4314-8b72-da693f487fab",
+      "title": "Average Delay Over Time",
+      "visualType": "line",
+      "pageId": "af7f2eba-a95d-426a-8193-e1d436725d56",
+      "layout": {
+        "x": 0,
+        "y": 12,
+        "width": 12,
+        "height": 10
+      },
+      "queryRef": {
+        "kind": "query",
+        "queryId": "fd53544e-8a27-44f9-8d62-2ee3f34c3750"
+      },
+      "visualOptions": {
+        "multipleYAxes": {
+          "base": {
+            "id": "-1",
+            "label": "",
+            "columns": [],
+            "yAxisMaximumValue": null,
+            "yAxisMinimumValue": 0,
+            "yAxisScale": "linear",
+            "horizontalLines": []
+          },
+          "additional": [],
+          "showMultiplePanels": false
+        },
+        "hideLegend": false,
+        "legendLocation": "bottom",
+        "xColumnTitle": "",
+        "xColumn": "Timestamp",
+        "yColumns": [
+          "AverageDelay"
+        ],
+        "seriesColumns": [
+          "BusLine"
+        ],
+        "xAxisScale": "linear",
+        "verticalLine": "",
+        "crossFilterDisabled": false,
+        "drillthroughDisabled": false,
+        "crossFilter": [],
+        "drillthrough": []
+      }
+    },
+    {
+      "id": "4c81adf5-3582-423e-a402-ff37bc3b90c0",
+      "title": "",
+      "visualType": "markdownCard",
+      "pageId": "af7f2eba-a95d-426a-8193-e1d436725d56",
+      "layout": {
+        "x": 0,
+        "y": 0,
+        "width": 24,
+        "height": 9
+      },
+      "markdownText": "![](https://kdawebassets.blob.core.windows.net/fabric-season/DashboardGif.gif)\n",
+      "visualOptions": {}
+    }
+  ],
+  "baseQueries": [],
+  "parameters": [
+    {
+      "kind": "string",
+      "id": "2ec12cf0-3c68-47e0-93e1-d87185412320",
+      "displayName": "Delay Definition",
+      "description": "",
+      "variableName": "_Delay",
+      "selectionType": "scalar",
+      "includeAllOption": false,
+      "defaultValue": {
+        "kind": "value",
+        "value": "2m"
+      },
+      "dataSource": {
+        "kind": "static",
+        "values": [
+          {
+            "value": "2m"
+          },
+          {
+            "value": "3m"
+          },
+          {
+            "value": "5m"
+          },
+          {
+            "value": "10m"
+          },
+          {
+            "value": "15m"
+          }
+        ]
+      },
+      "showOnPages": {
+        "kind": "all"
+      }
+    }
+  ],
+  "dataSources": [
+    {
+      "kind": "kusto-trident",
+      "scopeId": "kusto-trident",
+      "clusterUri": "https://trdp-0k151x4b6c4xfu3d7.z7.kusto.fabric.microsoft.com",
+      "database": "b979d625-77d5-4aae-b729-eae831dc22fb",
+      "name": "",
+      "id": "9c2549ed-4814-43c8-83b0-557ece01e4cd",
+      "workspace": "372d7dd7-bed3-4226-8149-295842b343c9"
+    }
+  ],
+  "pages": [
+    {
+      "name": "Page 1",
+      "id": "af7f2eba-a95d-426a-8193-e1d436725d56"
+    }
+  ],
+  "queries": [
+    {
+      "dataSource": {
+        "kind": "inline",
+        "dataSourceId": "9c2549ed-4814-43c8-83b0-557ece01e4cd"
+      },
+      "text": "BusTelemetry\n| where Timestamp > ago(1m)\n| summarize arg_max(Timestamp,*) by TripId\n| count \n\n",
+      "id": "c37a01f3-f650-4d45-866f-d678d3f2ff6a",
+      "usedVariables": []
+    },
+    {
+      "dataSource": {
+        "kind": "inline",
+        "dataSourceId": "9c2549ed-4814-43c8-83b0-557ece01e4cd"
+      },
+      "text": "BusTelemetry\n| where Timestamp > ago(1m) \n| summarize arg_max(Timestamp,*) by TripId\n| extend Delay = (Timestamp + totimespan(Properties.TimeToNextStation)) - ScheduleTime\n| where Delay > totimespan(_Delay)\n| count ",
+      "id": "50616af9-77f9-4fad-9e9c-772c475a622c",
+      "usedVariables": [
+        "_Delay"
+      ]
+    },
+    {
+      "dataSource": {
+        "kind": "inline",
+        "dataSourceId": "9c2549ed-4814-43c8-83b0-557ece01e4cd"
+      },
+      "text": "BusTelemetry\n| where Timestamp > ago(1m) \n| summarize arg_max(Timestamp,*) by TripId\n| extend Delay = (Timestamp + totimespan(Properties.TimeToNextStation)) - ScheduleTime\n| where Delay <= totimespan(_Delay)\n| count ",
+      "id": "5a9bded8-f0ad-4c22-9cdf-86b31e79911c",
+      "usedVariables": [
+        "_Delay"
+      ]
+    },
+    {
+      "dataSource": {
+        "kind": "inline",
+        "dataSourceId": "9c2549ed-4814-43c8-83b0-557ece01e4cd"
+      },
+      "text": "BusTelemetry\n| where Timestamp > ago(1m)\n| summarize arg_max(Timestamp,*) by TripId\n| extend Delay = Timestamp - ScheduleTime\n| where Delay > 10m\n| summarize NoShowCount = dcount(BusLine), NoShowBusLines = make_set(BusLine)\n\n\n\n",
+      "id": "c7ad9972-e9e2-48c2-940b-5e8248683273",
+      "usedVariables": []
+    },
+    {
+      "dataSource": {
+        "kind": "inline",
+        "dataSourceId": "9c2549ed-4814-43c8-83b0-557ece01e4cd"
+      },
+      "text": "BusTelemetry\n| where Timestamp > ago(1h)\n| where Properties.BusState == \"Arrived\"\n| summarize arg_max(Timestamp,*) by tostring(BusLine),TripId\n| order by toint(BusLine)\n",
+      "id": "59894b6c-b8a1-42ce-9a39-b7a953305d1c",
+      "usedVariables": []
+    },
+    {
+      "dataSource": {
+        "kind": "inline",
+        "dataSourceId": "9c2549ed-4814-43c8-83b0-557ece01e4cd"
+      },
+      "text": "BusTelemetry\n| where Timestamp > ago(1h)\n| extend Delay = (Timestamp + totimespan(Properties.TimeToNextStation)) - ScheduleTime\n| summarize AverageDelay = avg(Delay) by Timestamp, BusLine\n| where AverageDelay > totimespan(_Delay)\n\n\n\n\n",
+      "id": "fd53544e-8a27-44f9-8d62-2ee3f34c3750",
+      "usedVariables": [
+        "_Delay"
+      ]
+    }
+  ]
+}
