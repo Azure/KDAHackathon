@@ -1,6 +1,6 @@
 https://kustodetectiveagency.blob.core.windows.net/kdafabric1case1/BusTelemetryHistory.csv
 
-// Which bus line had the highest total departure delay?
+// Q: Which bus line had the highest total departure delay?
 // Focus on the starting point. What is the number of the first station?
 // Timing is everything. Can you figure out how to calculate the delay?
 
@@ -50,12 +50,12 @@ BusTelemetryHistory
 | summarize MaxDelay = max(Delay) by TripId, BusLine
 | summarize sum(MaxDelay)
 
-// Which bus line had the highest total departure delay?
+// Q: Which bus line had the highest total departure delay?
 
 BusTelemetryHistory
-| where StationNumber == 0
+| where StationNumber == 0 
 | extend Delay = Timestamp - ScheduleTime 
 | summarize MaxDelay = max(Delay) by TripId, BusLine 
 | summarize sum(MaxDelay) by BusLine //critical step
-| order  by sum_MaxDelay desc
+| order by sum_MaxDelay desc
 | top 1 by sum_MaxDelay desc
