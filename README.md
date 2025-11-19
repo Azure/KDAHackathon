@@ -7,7 +7,8 @@
 ## Message 0
 
 ### Calling all troops, this is a Code 3!
-[!KDA](/assets/FabricSpecial/badges_Fabric-c2.png)
+![KDA](/assets/FabricSpecial/badges_Fabric-c2.png "Fabric badge")
+
 MI5 have been compromised and no one within the agency can be trusted. The government have called upon Microsoft to help them solve their latest, secret online mission. But Microsoft can't do it alone… All units to be dispatched immediately to protect the fictional people of "Digitown". They have chosen you to protect the fictional people of "Digitown".   
  
 * When: ⌚ now()
