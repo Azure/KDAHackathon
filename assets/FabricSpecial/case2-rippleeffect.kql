@@ -1,0 +1,62 @@
+// Q: What are the three bus lines with highest average delay across all stations?
+
+// Think about what makes a complete trip.
+// Different 'BusState' events tell different stories. What states should you focus on to understand true delays?
+
+BusTelemetryHistory
+| take 10
+| extend BusState=tostring(Properties.BusState)
+
+// Convert values from a dynamic json object. 
+// Compute the average time to next station.
+
+BusTelemetryHistory
+| where TripId == 'S4224272240'
+| extend TimeToNextStation = totimespan(Properties.TimeToNextStation)
+| summarize AverageTimeToNextStation = avg(TimeToNextStation)
+
+// How long did passangers wait for the bus on a trip? 
+// Delay passangers experienced?
+// Means delay of when a bus arrived at a station.
+
+BusTelemetryHistory
+| where TripId == 'S4224272240'
+| where Properties.BusState == 'Arrived'
+| where StationNumber == 3
+| project ScheduleTime, Timestamp, Delay = Timestamp - ScheduleTime
+
+// Order the delays of all tirps for a bus.
+
+BusTelemetryHistory
+| where Properties.BusState == 'Arrived'
+| where BusLine == 11
+| extend Delay = Timestamp - ScheduleTime
+| summarize max(Delay) by BusLine, TripId
+| order by max_Delay
+
+
+// How many different types of bus states exist in our telemetry? 4
+
+BusTelemetryHistory
+| distinct BusState=tostring(Properties.BusState) //and I can see them.
+| count //faster :) 
+
+BusTelemetryHistory
+| summarize DistinctStatesCount = dcount(tostring(Properties.BusState))
+
+
+// What's the longest 'TimeToNextStation' in our data set?
+
+BusTelemetryHistory
+| project TimeToNextStation = totimespan(Properties.TimeToNextStation)
+| summarize max = max(TimeToNextStation)
+
+
+// Q: What are the three bus lines with highest average delay across all stations?
+
+BusTelemetryHistory
+| where Properties.BusState == 'Arrived'
+| extend Delay = Timestamp - ScheduleTime
+| summarize n=avg(Delay) by BusLine
+| order by n desc
+| top 3 by n
