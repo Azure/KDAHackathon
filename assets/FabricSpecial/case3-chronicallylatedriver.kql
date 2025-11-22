@@ -1,0 +1,93 @@
+// Q: Who is the driver that is causing the most delays on average?
+
+.execute database script <|
+// Create table for driver assignments
+.create-merge table DriverAssignments (ScheduleTime: datetime,TripId: string,BusLine: long,DriverId: string)
+// Clear any previously mirroring policy
+.delete table DriverAssignments policy mirroring
+// Clear any previously ingested data if such exists
+.clear table DriverAssignments data
+// Import data for driver assignments
+.ingest into table DriverAssignments('https://case3.blob.core.windows.net/kda/DriverAssignments.csv') with (ignoreFirstRecord=true)
+
+
+DriverAssignments
+| take 10
+
+DriverAssignments
+| count
+
+BusTelemetryHistory
+| count
+
+// 👮‍♂️ Detective A walks into the bar and says:
+// "I'm looking for suspects with matching alibis."
+// 👮‍♀️ Detective B replies:
+// "Perfect, let's INNER JOIN our cases — only the ones who were actually at the bar will show up."
+// The bartender overhears and mutters:
+// "Careful… if you LEFT JOIN, you'll end up with a lot of shady characters drinking alone."
+
+
+BusTelemetryHistory
+| join kind=inner (DriverAssignments) on TripId
+| take 10
+
+BusTelemetryHistory
+| join kind=leftouter (
+    DriverAssignments 
+    | project DriverId, TripId, ScheduleTime
+    ) on TripId, ScheduleTime
+| take 10
+
+BusTelemetryHistory
+| join kind=leftouter (DriverAssignments) on TripId, ScheduleTime
+| project-away TripId1, ScheduleTime1 //remove redundent columns from results
+| take 10
+
+
+// What's the highest number of different bus lines operated by a single driver?
+
+BusTelemetryHistory
+| join kind=inner (DriverAssignments) on TripId
+| summarize dcount(BusLine) by DriverId
+| sort by dcount_BusLine desc 
+| top 1 by dcount_BusLine
+
+// What's the average number of trips per driver? (rounded to 2 decimal places)
+
+BusTelemetryHistory
+| join kind=inner (DriverAssignments) on TripId
+| summarize t=dcount(TripId) by DriverId
+| summarize round(avg(t),2)
+
+// How many drivers operate bus line 41?
+
+BusTelemetryHistory
+| where BusLine == 41 //do this before join better perf
+| join kind=inner (DriverAssignments) on TripId
+| summarize dcount(DriverId) by BusLine
+
+
+// Q: Who is the driver that is causing the most delays on average?
+
+
+BusTelemetryHistory
+| where Properties.BusState == 'Arrived'
+| extend Delay = Timestamp - ScheduleTime
+| summarize avgdelay=avg(Delay) by TripId
+| join kind=inner (DriverAssignments) on TripId
+| summarize maxdelay=max(avgdelay) by DriverId
+| sort by maxdelay desc
+| top 1 by maxdelay
+// wrong
+
+
+// try a sum of avergages.
+BusTelemetryHistory
+| where Properties.BusState == 'Arrived'
+| extend Delay = Timestamp - ScheduleTime
+| summarize avgdelay=avg(Delay) by TripId
+| join kind=inner (DriverAssignments) on TripId //pause here and look at the data.
+| summarize sum(avgdelay) by DriverId //whuala!
+| sort by sum_avgdelay desc
+| top 1 by sum_avgdelay //ripples that filled a bucket.
