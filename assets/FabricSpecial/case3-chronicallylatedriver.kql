@@ -82,7 +82,7 @@ BusTelemetryHistory
 // wrong
 
 
-// try a sum of avergages.
+// think different
 BusTelemetryHistory
 | where Properties.BusState == 'Arrived'
 | extend Delay = Timestamp - ScheduleTime
