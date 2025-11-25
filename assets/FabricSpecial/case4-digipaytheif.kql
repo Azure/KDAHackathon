@@ -1,0 +1,89 @@
+// The DigiPay Theif
+
+let ext = externaldata(Timestamp:datetime, PayerId:string, RecipientId:string, Amount:real)
+    [@"https://kustodetectiveagency.blob.core.windows.net/kdafabric1case4/FinancialTransactions.csv.gz"]
+    with (format="csv", compression="gzip", has_header_row=true);
+ext
+| take 10
+
+  
+// bring it.
+.execute database script <|
+// Create table for financial transactions
+.create-merge table FinancialTransactions (Timestamp: datetime,PayerId: string,RecipientId: string,Amount: real)
+// Clear any previously mirroring policy
+.delete table FinancialTransactions policy mirroring
+// Clear any previously ingested data if such exists
+.clear table FinancialTransactions data
+// Import data for financial transactions
+.ingest into table FinancialTransactions (
+'https://kustodetectiveagency.blob.core.windows.net/kdafabric1case4/FinancialTransactions.csv.gz') with (ignoreFirstRecord=true)
+
+
+FinancialTransactions
+| take 10
+
+FinancialTransactions
+| summarize min(Timestamp), max(Timestamp)
+
+FinancialTransactions
+| summarize sum(Amount) by bin(Timestamp,1d)
+| render linechart 
+
+let suspiciousAmount = 8.75;
+let timeWindow = 1h;
+FinancialTransactions
+| where Amount > suspiciousAmount
+| summarize TotalLargeTransfers = count() by bin(Timestamp, timeWindow)
+| render timechart
+
+// What's the total amount transferred in the peak hour by amount?
+
+FinancialTransactions
+| summarize sum(Amount) by bin(Timestamp,1h)
+| sort by sum_Amount desc 
+| top 10 by sum_Amount
+
+
+// How many unique recipients received transfers in amounts greater than 100,000 credits?
+
+FinancialTransactions
+// | where Amount > 100000 //they mean in total.
+| summarize sum(Amount) by RecipientId
+| where sum_Amount > 100000
+| summarize dcount(RecipientId)
+
+// okay...not so sure how that training helped us find the theif.
+// after a short break and too many failed attempts, I started thinking more about the heist and case.
+
+
+// Q: Who is the thief?
+// Can one recepient device charge more than one payer at the same time and within 30cm of proximity?
+FinancialTransactions
+| take 10
+
+
+FinancialTransactions
+| summarize sum(Amount) by bin(Timestamp,1d)
+| render linechart 
+
+print x=unixtime_milliseconds_todatetime(1732233600000) 
+
+FinancialTransactions
+| where Timestamp between (datetime(2024-11-10 00:00:00.000)  .. datetime(2024-11-12 00:00:00.000)) //a high-peak range
+| summarize count(PayerId) by RecipientId, bin(Timestamp,30s)
+| sort by count_PayerId desc //high amount of ppl charged within 30s
+| top 1 by count_PayerId desc //arrest this merchant.
+
+
+// dig into that window to check if at same time or very frequent?
+// FinancialTransactions
+// | where Timestamp between (datetime(2024-11-10 20:34:30.000) .. datetime(2024-11-10 20:35:00.000))
+// | where RecipientId == '<theif>'
+
+// were there others?
+// FinancialTransactions
+// | where Timestamp == Timestamp 
+// | summarize count(PayerId) by bin(Timestamp,30s), RecipientId
+// | where count_PayerId >= 2
+// | sort by count_PayerId desc
